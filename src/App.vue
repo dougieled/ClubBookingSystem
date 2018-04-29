@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <notifications group="foo" />
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -8,15 +7,6 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">View upcoming Holidays</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">View Schedule</a>
-      </li>
     </ul>
     <div class="form-inline my-2 my-lg-0">
       <button class="btn btn-outline-success my-2 my-sm-0">Login</button>
@@ -24,18 +14,18 @@
   </div>
 </nav>
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
+    <div class="jumbotron p-0">
       <div class="container">
         <h1 class="display-3">Glen Seniors Holiday Tracking System!</h1>
         <p>Use the Add Holiday button below to give management notice of the days you are away on holiday.</p>
         <button class="btn btn-block btn-success mb-3 btn-lg" >Add Holiday &raquo;</button>
         <div class="row">
         <div class="col-md-4">
-         <router-link to="/AddAppointment" class="btn btn-block btn-success mb-3">Add Holiday</router-link>
+         <router-link to="/AddHoliday" class="btn btn-block btn-success mb-3">Add Holiday</router-link>
   
         </div>
         <div class="col-md-4">
-          <router-link to="/ViewUpcomingBookings" class="btn btn-block btn-success mb-3">View upcoming Holiday</router-link>
+          <router-link to="/ViewUpcomingHolidays" class="btn btn-block btn-success mb-3">View upcoming Holiday</router-link>
        </div>
         <div class="col-md-4">
           <router-link to="/ViewSchedule" class="btn btn-block btn-success mb-3">View Schedule</router-link>

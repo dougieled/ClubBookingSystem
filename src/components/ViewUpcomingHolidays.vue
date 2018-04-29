@@ -1,7 +1,7 @@
   <template>
   <div class="row justify-content-md-center">
   <div class="col-md-10">
-  <!--Upcoming Appointments-->
+  <!--Upcoming Holidays-->
             <table class="table table-striped">
             <thead>
               <tr>
@@ -14,13 +14,13 @@
             </thead>
             <tbody>
               <tr 
-                v-for="appointment in dateList"
-                :key="appointment.id">
-                <td>{{ appointment.title }}</td>
-                <td>{{ appointment.destination }}</td>
-                <td>{{ appointment.start | Moment }}</td>
-                <td>{{ appointment.end | Moment }}</td>
-                <td><button @click="deleteAppointment(appointment)" class="btn btn-danger" slot="button">Delete</button></td>
+                v-for="holiday in dateList"
+                :key="holiday.id">
+                <td>{{ holiday.title }}</td>
+                <td>{{ holiday.destination }}</td>
+                <td>{{ holiday.start | Moment }}</td>
+                <td>{{ holiday.end | Moment }}</td>
+                <td><button @click="deleteAppointment(holiday)" class="btn btn-danger" slot="button">Delete</button></td>
               </tr>
             </tbody>
           </table>
@@ -39,14 +39,14 @@ import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
 
 
 
-let appointmentsRef = db.ref('appointments');
+let holidaysRef = db.ref('holidays');
 
 export default {
 
-  name: 'AddAppointment',
+  name: 'AddHoliday',
         firebase:{
-    appointments: appointmentsRef,
-    dateList: db.ref('appointments').orderByChild('start')
+    holidays: holidaysRef,
+    dateList: db.ref('holidays').orderByChild('start')
   },
   data () {
     return {
@@ -57,19 +57,19 @@ export default {
   },
 
   methods: {
-    deleteAppointment: function(appointment){
-      appointmentsRef.child(appointment['.key']).remove()
+    deleteAppointment: function(holiday){
+      holidaysRef.child(holiday['.key']).remove()
       toastr.success('Appointment removed successfully')
     },
   },
   filters: {
   Moment: function (date) {
-    return Moment(date).format('LLLL');
+    return Moment(date).format('MMMM Do YYYY');
   }
 },
 computed:{
   orderDatesAsc: function(){
-    return _.orderBy(appointments, ['start'], ['asc', 'desc']);
+    return _.orderBy(holidays, ['start'], ['asc', 'desc']);
   }
 }
 

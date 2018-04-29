@@ -5,19 +5,19 @@
     <div class="row justify-content-md-center">
     <div class="col-sm-12 col-lg-6">
     <h3 class="display-6">Add Holiday Dates</h3>
-              <form id="form" v-on:submit.prevent="addAppointment">
+              <form id="form" v-on:submit.prevent="AddHoliday">
               <div class="form-group">
                 <label for="appointmentName">Name:</label>
-                <input  type="text"  id="appointmentName"  class="form-control" v-model="newAppointment.title">
+                <input  type="text"  id="appointmentName"  class="form-control" v-model="newHoliday.title">
               </div>
               <div class="form-group">
                 <label for="appointmentName">Destination:</label>
-                <v-select  v-model="newAppointment.destination" :options="countries"></v-select>
+                <v-select  v-model="newHoliday.destination" :options="countries"></v-select>
               </div>
               <div class="form-group">
                 <label for="appointmentDate">Date Leaving:</label>
                         <flat-pickr
-                v-model="newAppointment.start"
+                v-model="newHoliday.start"
                 :config="flatpickrConfig"                                
                 :required="true"                
                 class="form-control" 
@@ -28,7 +28,7 @@
               <div class="form-group">
                 <label for="appointmentDate">Date Returning:</label>
                         <flat-pickr
-                v-model="newAppointment.end"
+                v-model="newHoliday.end"
                 :config="flatpickrConfig"                                
                 :required="true"                
                 class="form-control" 
@@ -59,23 +59,23 @@ import axios from 'axios';
 import _ from 'lodash';
 //Vue.component('v-select', vSelect)
 
-let appointmentsRef = db.ref('appointments');
+let holidaysRef = db.ref('holidays');
 
 export default {
     components:{
     SweetModal, SweetModalTab, flatPickr, FullCalendar, vSelect
   },
-  name: 'AddAppointment',
+  name: 'AddHoliday',
         firebase:{
-    appointments: appointmentsRef,
-    dateList: db.ref('appointments').orderByChild('start')
+    holidays: holidaysRef,
+    dateList: db.ref('holidays').orderByChild('start')
   },
   created(){
     this.getCountries();
   },
   data () {
     return {
-      msg: 'Appointment Booking System',
+      msg: 'Holiday Booking System',
       countries:[],
       //flags
       showSchedule: true,
@@ -83,7 +83,7 @@ export default {
       editable: "false",
 
       //New Appointment Data
-      newAppointment: {
+      newHoliday: {
         id: '',
         title: '',
         destination:'',
@@ -105,22 +105,22 @@ export default {
   },
 
   methods: {
-    addAppointment: function() {
+    AddHoliday: function() {
       var randomID = Math.random().toString(36).substr(2, 9);
-      this.newAppointment.id = randomID;
+      this.newHoliday.id = randomID;
 
 
 
-      appointmentsRef.push(this.newAppointment)
-      this.newAppointment.id = '',
-      this.newAppointment.title = '',
-      this.newAppointment.destination = '',
-      this.newAppointment.start = ''
-      this.newAppointment.end = '',
+      holidaysRef.push(this.newHoliday)
+      this.newHoliday.id = '',
+      this.newHoliday.title = '',
+      this.newHoliday.destination = '',
+      this.newHoliday.start = ''
+      this.newHoliday.end = '',
       toastr.success('Appointment added successfully')
     },
-    deleteAppointment: function(appointment){
-      appointmentsRef.child(appointment['.key']).remove()
+    deleteAppointment: function(holiday){
+      holidaysRef.child(holiday['.key']).remove()
       toastr.success('Appointment removed successfully')
     },
     getCountries(){
@@ -142,7 +142,7 @@ export default {
 },
 computed:{
   orderDatesAsc: function(){
-    return _.orderBy(appointments, ['start'], ['asc', 'desc']);
+    return _.orderBy(holidays, ['start'], ['asc', 'desc']);
   }
 }
 

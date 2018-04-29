@@ -9,8 +9,6 @@ import VueFire from 'vuefire'
 import FullCalendar from 'vue-full-calendar'
 Vue.use(FullCalendar)
 
-window.$ = window.jQuery = require('jquery')
-
 Vue.use(VueFire)
 
 Vue.config.productionTip = false
