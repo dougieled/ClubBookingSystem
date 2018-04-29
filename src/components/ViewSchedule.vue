@@ -1,7 +1,9 @@
   <template>
+  <div class="row justify-content-md-center">
   <div class="col-md-10 mb-5">
   <!--Calendar Section-->
   <full-calendar ref="calendar" :config="calendarOptions" :events="appointments" :editable="editable"></full-calendar>
+  </div>
   </div>
   </template>
   <script>
@@ -34,14 +36,13 @@ export default {
 
        //Calendar Config
     calendarOptions: {
-      hiddenDays: [ 0, 1 ],
+      defaultView:'month',
       aspectRatio: 2.5,
       allDaySlot:false,
-      minTime:'08:00',
-      maxTime:'22:00',
       disableDragging: false,
       draggable:false,
-      themeSystem: 'bootstrap3',
+      themeSystem: 'bootstrap4',
+      nowIndicator: false,
     }, 
     }
   },

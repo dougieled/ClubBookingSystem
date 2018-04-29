@@ -1,11 +1,14 @@
   <template>
-  <div class="col-md-10 mb-5">
+  <div class="row justify-content-md-center">
+  <div class="col-md-10">
   <!--Upcoming Appointments-->
             <table class="table table-striped">
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Date</th>
+                <th>Destination</th>
+                <th>Date Leaving</th>
+                <th>Date Returning</th>
                 <th>Delete</th>
               </tr>
             </thead>
@@ -14,11 +17,14 @@
                 v-for="appointment in dateList"
                 :key="appointment.id">
                 <td>{{ appointment.title }}</td>
+                <td>{{ appointment.destination }}</td>
                 <td>{{ appointment.start | Moment }}</td>
+                <td>{{ appointment.end | Moment }}</td>
                 <td><button @click="deleteAppointment(appointment)" class="btn btn-danger" slot="button">Delete</button></td>
               </tr>
             </tbody>
           </table>
+  </div>
   
   </div>
   </template>

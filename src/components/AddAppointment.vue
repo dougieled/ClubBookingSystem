@@ -2,23 +2,20 @@
   <div class="hello">
     <!--Add Appointment Section-->
     <div class="container-fluid">
-    <div class="row">
-  <div class="col-md-2">
- <!-- <img class="img-responsive"  src="../assets/jmglogo.png">-->
-  <button class="btn btn-block btn-success mb-3" @click="openModal">Add Appointment</button>
-  </div>
-</div>
-</div>
-      
-      <sweet-modal ref="testModal">
-      <h3>Add Appointment</h3>
+    <div class="row justify-content-md-center">
+    <div class="col-sm-12 col-lg-6">
+    <h3 class="display-6">Add Holiday Dates</h3>
               <form id="form" v-on:submit.prevent="addAppointment">
               <div class="form-group">
                 <label for="appointmentName">Name:</label>
                 <input  type="text"  id="appointmentName"  class="form-control" v-model="newAppointment.title">
               </div>
               <div class="form-group">
-                <label for="appointmentDate">Date:</label>
+                <label for="appointmentName">Destination:</label>
+                <v-select  v-model="newAppointment.destination" :options="countries"></v-select>
+              </div>
+              <div class="form-group">
+                <label for="appointmentDate">Date Leaving:</label>
                         <flat-pickr
                 v-model="newAppointment.start"
                 :config="flatpickrConfig"                                
@@ -28,37 +25,58 @@
                 name="date">
                      </flat-pickr>
               </div>
+              <div class="form-group">
+                <label for="appointmentDate">Date Returning:</label>
+                        <flat-pickr
+                v-model="newAppointment.end"
+                :config="flatpickrConfig"                                
+                :required="true"                
+                class="form-control" 
+                placeholder="Select date"               
+                name="date">
+                     </flat-pickr>
+              </div>
               <input type="submit"  class="btn btn-primary" value="Add Appointment">
             </form>
-      </sweet-modal>
+            </div>
+            </div>
+</div>
   </div>
 </template>
 
 <script>
-import Moment from 'moment'
-import db from './../db.js'
+import Moment from 'moment';
+import db from './../db.js';
 import flatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
-import toastr from 'toastr'
-import lodash from 'lodash'
-import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
-import { FullCalendar } from 'vue-full-calendar'
+import toastr from 'toastr';
+import lodash from 'lodash';
+import { SweetModal, SweetModalTab } from 'sweet-modal-vue';
+import { FullCalendar } from 'vue-full-calendar';
+import Vue from 'vue';
+import vSelect from 'vue-select';
+import axios from 'axios';
+import _ from 'lodash';
+//Vue.component('v-select', vSelect)
 
 let appointmentsRef = db.ref('appointments');
 
 export default {
     components:{
-    SweetModal, SweetModalTab, flatPickr, FullCalendar
+    SweetModal, SweetModalTab, flatPickr, FullCalendar, vSelect
   },
   name: 'AddAppointment',
         firebase:{
     appointments: appointmentsRef,
     dateList: db.ref('appointments').orderByChild('start')
   },
+  created(){
+    this.getCountries();
+  },
   data () {
     return {
       msg: 'Appointment Booking System',
-
+      countries:[],
       //flags
       showSchedule: true,
       showUpcomingBookings: false,
@@ -68,6 +86,7 @@ export default {
       newAppointment: {
         id: '',
         title: '',
+        destination:'',
         start: '',
         end: '',
         editable: false
@@ -75,18 +94,11 @@ export default {
 
         //flatpickr config
       flatpickrConfig: {
-          altFormat: 'l j M, Y - H:i',
+          altFormat: 'l j M, Y',
           altInput: true,
-          dateFormat: 'Y-m-d'+"T"+'H:i:S', 
+          dateFormat: 'Y-m-d', 
           minDate: 'today', 
-          enableTime: true,
-          minuteIncrement: 15,
-          time_24hr: true,
           "disable": [
-        function(date) {
-            // return true to disable
-            return (date.getDay() === 0 || date.getDay() === 1);
-        }
            ],
              }, 
     }
@@ -95,28 +107,33 @@ export default {
   methods: {
     addAppointment: function() {
       var randomID = Math.random().toString(36).substr(2, 9);
-      var addOneHour = Moment(this.newAppointment.start).add(1,'h').format('YYYY/MM/DD HH:mm:mm');
-      var startTimeMoment = Moment(this.newAppointment.start).format('YYYY/MM/DD HH:mm:mm');
       this.newAppointment.id = randomID;
-      this.newAppointment.start = startTimeMoment;
-      this.newAppointment.end = addOneHour;
+
 
 
       appointmentsRef.push(this.newAppointment)
       this.newAppointment.id = '',
       this.newAppointment.title = '',
+      this.newAppointment.destination = '',
       this.newAppointment.start = ''
       this.newAppointment.end = '',
-      this.$refs.testModal.close()
       toastr.success('Appointment added successfully')
-    },
-    openModal: function(){
-      this.$refs.testModal.open()
     },
     deleteAppointment: function(appointment){
       appointmentsRef.child(appointment['.key']).remove()
       toastr.success('Appointment removed successfully')
     },
+    getCountries(){
+      var self = this;
+      axios.get(`https://restcountries.eu/rest/v2/all`)
+      .then(res => {
+        var tempArrayHolder = res.data
+                    var i=0;
+                    for(i=0;i<tempArrayHolder.length;i++){
+                      self.countries.push(tempArrayHolder[i].name)
+                    }
+      })
+    }
   },
   filters: {
   Moment: function (date) {
