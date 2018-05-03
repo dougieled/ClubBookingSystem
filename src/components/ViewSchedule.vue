@@ -37,12 +37,20 @@ export default {
        //Calendar Config
     calendarOptions: {
       defaultView:'month',
-      aspectRatio: 2.5,
+      handleWindowResize:true,
       allDaySlot:false,
       disableDragging: false,
       draggable:false,
       themeSystem: 'bootstrap4',
       nowIndicator: false,
+      eventBackgroundColor:'#56CC9D',
+      eventTextColor:'black',
+      header:{
+        center:'title',
+        left:'prev,next',
+        right:'',
+      },
+      
     }, 
     }
   },
@@ -54,6 +62,7 @@ export default {
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 h1, h2 {
   font-weight: normal;
 }

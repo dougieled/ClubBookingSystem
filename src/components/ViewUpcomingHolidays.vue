@@ -4,9 +4,9 @@
   <!--Upcoming Holidays-->
             <table class="table table-striped">
             <thead>
-              <tr>
+              <tr class="table-bordered">
                 <th>Name</th>
-                <th>Destination</th>
+                <!--<th>Destination</th>-->
                 <th>Date Leaving</th>
                 <th>Date Returning</th>
                 <th>Delete</th>
@@ -17,13 +17,19 @@
                 v-for="holiday in dateList"
                 :key="holiday.id">
                 <td>{{ holiday.title }}</td>
-                <td>{{ holiday.destination }}</td>
+                <!--<td>{{ holiday.destination }}</td>-->
                 <td>{{ holiday.start | Moment }}</td>
                 <td>{{ holiday.end | Moment }}</td>
-                <td><button @click="deleteAppointment(holiday)" class="btn btn-danger" slot="button">Delete</button></td>
+                <td><button @click="openModalMethod(holiday)" class="btn btn-danger">Delete</button></td>
               </tr>
             </tbody>
           </table>
+          <sweet-modal ref="deleteModal" icon="warning">
+	Are you sure you want to delete this entry?
+  <br>
+  <button class="btn btn-lg btn-success" @click="deleteAppointment">Yes</button>
+   <button class="btn btn-lg btn-danger ml-4" @click="closeModalMethod">No</button>
+</sweet-modal>
   </div>
   
   </div>
@@ -38,11 +44,11 @@ import lodash from 'lodash'
 import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
 
 
-
 let holidaysRef = db.ref('holidays');
 
 export default {
-
+components:{
+    SweetModal, SweetModalTab},
   name: 'AddHoliday',
         firebase:{
     holidays: holidaysRef,
@@ -51,15 +57,27 @@ export default {
   data () {
     return {
       msg: 'Appointment Booking System',
-
+      deleteModal:false,
       editable: "false",
+      seletedRow: '',
     }
   },
 
   methods: {
-    deleteAppointment: function(holiday){
-      holidaysRef.child(holiday['.key']).remove()
-      toastr.success('Appointment removed successfully')
+    openModalMethod(holiday){
+      this.seletedRow = ''
+      this.$refs.deleteModal.open()
+      this.seletedRow = holiday
+    },
+    closeModalMethod(){
+      this.$refs.deleteModal.close()
+      this.seletedRow = ''
+    },
+    deleteAppointment: function(){
+      holidaysRef.child(this.seletedRow['.key']).remove()
+      toastr.success('Holiday removed successfully')
+      this.$refs.deleteModal.close()
+      this.seletedRow = ''
     },
   },
   filters: {

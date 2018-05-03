@@ -6,6 +6,7 @@ import Home from '@/components/Home'
 import ViewSchedule from '@/components/ViewSchedule'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
+import MatchDates from '@/components/MatchDates'
 
 Vue.use(Router)
 
@@ -40,6 +41,11 @@ export default new Router({
       path: '/SignUp',
       name: 'SignUp',
       component: SignUp
+    },
+    {
+      path: '/MatchDates',
+      name: 'MatchDates',
+      component: MatchDates
     },
   ]
 })

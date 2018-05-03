@@ -10,10 +10,10 @@
                 <label for="appointmentName">Name:</label>
                 <input  type="text"  id="appointmentName"  class="form-control" v-model="newHoliday.title">
               </div>
-              <div class="form-group">
+             <!-- <div class="form-group">
                 <label for="appointmentName">Destination:</label>
-                <v-select  v-model="newHoliday.destination" :options="countries"></v-select>
-              </div>
+                <v-select v-model="newHoliday.destination" :options="countries"></v-select>
+              </div>-->
               <div class="form-group">
                 <label for="appointmentDate">Date Leaving:</label>
                         <flat-pickr
@@ -21,7 +21,7 @@
                 :config="flatpickrConfig"                                
                 :required="true"                
                 class="form-control" 
-                placeholder="Select date"               
+                placeholder="Select date"             
                 name="date">
                      </flat-pickr>
               </div>
@@ -97,6 +97,7 @@ export default {
           altFormat: 'l j M, Y',
           altInput: true,
           dateFormat: 'Y-m-d', 
+          disableMobile:true,
           minDate: 'today', 
           "disable": [
            ],
@@ -106,6 +107,10 @@ export default {
 
   methods: {
     AddHoliday: function() {
+      if(this.newHoliday.title =='' || this.newHoliday.start =='' || this.newHoliday.end == ''){
+        toastr.error('You must add a Name, Date Leaving and Date Returning')
+
+      }else{
       var randomID = Math.random().toString(36).substr(2, 9);
       this.newHoliday.id = randomID;
 
@@ -118,6 +123,7 @@ export default {
       this.newHoliday.start = ''
       this.newHoliday.end = '',
       toastr.success('Appointment added successfully')
+      }
     },
     deleteAppointment: function(holiday){
       holidaysRef.child(holiday['.key']).remove()
