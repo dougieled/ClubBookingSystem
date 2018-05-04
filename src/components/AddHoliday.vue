@@ -15,7 +15,7 @@
                 <v-select v-model="newHoliday.destination" :options="countries"></v-select>
               </div>-->
               <div class="form-group">
-                <label for="appointmentDate">Date Leaving:</label>
+                <label for="appointmentDate">Date From:</label>
                         <flat-pickr
                 v-model="newHoliday.start"
                 :config="flatpickrConfig"                                
@@ -26,9 +26,9 @@
                      </flat-pickr>
               </div>
               <div class="form-group">
-                <label for="appointmentDate">Date Returning:</label>
+                <label for="appointmentDate">Date To:</label>
                         <flat-pickr
-                v-model="newHoliday.end"
+                v-model="holidayEnding"
                 :config="flatpickrConfig"                                
                 :required="true"                
                 class="form-control" 
@@ -72,6 +72,7 @@ export default {
   },
   created(){
     this.getCountries();
+    this.date()
   },
   data () {
     return {
@@ -81,7 +82,7 @@ export default {
       showSchedule: true,
       showUpcomingBookings: false,
       editable: "false",
-
+      holidayEnding:'',
       //New Appointment Data
       newHoliday: {
         id: '',
@@ -106,8 +107,22 @@ export default {
   },
 
   methods: {
+      date(){
+        var a = Moment('2013-01-01');
+var b = Moment('2013-01-05');
+
+// If you want an exclusive end date (half-open interval)
+for (var m = Moment(a); m.isBefore(b); m.add(1, 'days')) {
+  console.log(m.format('YYYY-MM-DD'));
+}
+console.log('---------------------------')
+// If you want an inclusive end date (fully-closed interval)
+for (var m = Moment(a); m.diff(b, 'days') <= 0; m.add(1, 'days')) {
+  console.log(m.format('YYYY-MM-DD'));
+}
+      },
     AddHoliday: function() {
-      if(this.newHoliday.title =='' || this.newHoliday.start =='' || this.newHoliday.end == ''){
+      if(this.newHoliday.title =='' || this.newHoliday.start =='' || this.holidayEnding == ''){
         toastr.error('You must add a Name, Date Leaving and Date Returning')
 
       }else{
@@ -122,6 +137,7 @@ export default {
       this.newHoliday.destination = '',
       this.newHoliday.start = ''
       this.newHoliday.end = '',
+      this.holidayEnding = '',
       toastr.success('Appointment added successfully')
       }
     },
@@ -139,6 +155,11 @@ export default {
                       self.countries.push(tempArrayHolder[i].name)
                     }
       })
+    }
+  },
+  watch:{
+    holidayEnding(){
+      this.newHoliday.end = this.holidayEnding + ' 23:59'
     }
   },
   filters: {

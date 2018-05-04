@@ -38,6 +38,7 @@ components:{
         firebase:{
     holidays: holidaysRef,
     dateList: db.ref('holidays').orderByChild('start'),
+    
   },
   data () {
     return {
@@ -55,9 +56,6 @@ components:{
   }
 },
 computed:{
-  newDateList(){
-    return dateList
-  }
 }
 
 }

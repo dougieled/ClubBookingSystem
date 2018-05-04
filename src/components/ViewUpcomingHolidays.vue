@@ -7,8 +7,7 @@
               <tr class="table-bordered">
                 <th>Name</th>
                 <!--<th>Destination</th>-->
-                <th>Date Leaving</th>
-                <th>Date Returning</th>
+                <th>Unavailable Dates</th>
                 <th>Delete</th>
               </tr>
             </thead>
@@ -18,8 +17,7 @@
                 :key="holiday.id">
                 <td>{{ holiday.title }}</td>
                 <!--<td>{{ holiday.destination }}</td>-->
-                <td>{{ holiday.start | Moment }}</td>
-                <td>{{ holiday.end | Moment }}</td>
+                <td>{{ holiday.start | Moment }} -  {{ holiday.end | Moment }}</td>
                 <td><button @click="openModalMethod(holiday)" class="btn btn-danger">Delete</button></td>
               </tr>
             </tbody>
