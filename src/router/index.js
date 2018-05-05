@@ -23,7 +23,7 @@ export default new Router({
       component: AddHoliday
     },
     {
-      path: '/ViewUpcomingHolidays',
+      path: '/Delete',
       name: 'ViewUpcomingHolidays',
       component: ViewUpcomingHolidays
     },

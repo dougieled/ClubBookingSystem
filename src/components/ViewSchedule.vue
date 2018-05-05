@@ -2,7 +2,7 @@
   <div class="row justify-content-md-center">
   <div class="col-md-10 mb-5">
   <!--Calendar Section-->
-  <full-calendar ref="calendar" :config="calendarOptions" :events="holidays" :editable="editable"></full-calendar>
+  <full-calendar ref="calendar" :config="calendarOptions" :events="playerHoliday" :editable="editable"></full-calendar>
   </div>
   </div>
   </template>
@@ -16,7 +16,7 @@ import lodash from 'lodash'
 import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
 import { FullCalendar } from 'vue-full-calendar'
 
-let holidaysRef = db.ref('holidays');
+let playerHolidaysRef = db.ref('playerHoliday');
 
 export default {
     components:{
@@ -24,8 +24,8 @@ export default {
   },
   name: 'ViewSchedule',
         firebase:{
-    holidays: holidaysRef,
-    dateList: db.ref('holidays').orderByChild('start')
+    playerHoliday: playerHolidaysRef,
+    dateList: db.ref('playerHoliday').orderByChild('start')
   },
   data () {
     return {
@@ -50,6 +50,7 @@ export default {
         left:'prev,next',
         right:'',
       },
+      displayEventTime: false
       
     }, 
     }

@@ -21,10 +21,10 @@
         <router-link to="/AddHoliday" class="btn btn-block btn-success mb-3 btn-lg">Add Holiday &raquo;</router-link>
         <div class="row">
         <div class="col-md-6">
-          <router-link to="/ViewUpcomingHolidays" class="btn btn-block btn-success mb-3">View Upcoming Holidays &raquo;</router-link>
-       </div>
-        <div class="col-md-6">
           <router-link to="/ViewSchedule" class="btn btn-block btn-success mb-3">View via Calendar &raquo;</router-link>
+        </div>
+         <div class="col-md-6">
+          <router-link to="/MatchDates" class="btn btn-block btn-success mb-3">Match Dates &raquo;</router-link>
         </div>
       </div>
       </div>

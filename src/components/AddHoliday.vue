@@ -17,7 +17,7 @@
               <div class="form-group">
                 <label for="appointmentDate">Date From:</label>
                         <flat-pickr
-                v-model="newHoliday.start"
+                v-model="startDate"
                 :config="flatpickrConfig"                                
                 :required="true"                
                 class="form-control" 
@@ -28,7 +28,7 @@
               <div class="form-group">
                 <label for="appointmentDate">Date To:</label>
                         <flat-pickr
-                v-model="holidayEnding"
+                v-model="endDate"
                 :config="flatpickrConfig"                                
                 :required="true"                
                 class="form-control" 
@@ -59,7 +59,7 @@ import axios from 'axios';
 import _ from 'lodash';
 //Vue.component('v-select', vSelect)
 
-let holidaysRef = db.ref('holidays');
+let playerHolidaysRef = db.ref('playerHoliday');
 
 export default {
     components:{
@@ -67,12 +67,8 @@ export default {
   },
   name: 'AddHoliday',
         firebase:{
-    holidays: holidaysRef,
-    dateList: db.ref('holidays').orderByChild('start')
-  },
-  created(){
-    this.getCountries();
-    this.date()
+    playerHoliday: playerHolidaysRef,
+    dateList: db.ref('playerHoliday').orderByChild('start')
   },
   data () {
     return {
@@ -82,7 +78,8 @@ export default {
       showSchedule: true,
       showUpcomingBookings: false,
       editable: "false",
-      holidayEnding:'',
+      startDate:'',
+      endDate:'',
       //New Appointment Data
       newHoliday: {
         id: '',
@@ -107,60 +104,47 @@ export default {
   },
 
   methods: {
-      date(){
-        var a = Moment('2013-01-01');
-var b = Moment('2013-01-05');
-
-// If you want an exclusive end date (half-open interval)
-for (var m = Moment(a); m.isBefore(b); m.add(1, 'days')) {
-  console.log(m.format('YYYY-MM-DD'));
-}
-console.log('---------------------------')
-// If you want an inclusive end date (fully-closed interval)
-for (var m = Moment(a); m.diff(b, 'days') <= 0; m.add(1, 'days')) {
-  console.log(m.format('YYYY-MM-DD'));
-}
-      },
-    AddHoliday: function() {
-      if(this.newHoliday.title =='' || this.newHoliday.start =='' || this.holidayEnding == ''){
-        toastr.error('You must add a Name, Date Leaving and Date Returning')
+      AddHoliday(){
+        if(this.newHoliday.title =='' || this.startDate =='' || this.endDate == ''){
+          toastr.error('You must add a Name, and the Dates the Player is away !')
 
       }else{
-      var randomID = Math.random().toString(36).substr(2, 9);
-      this.newHoliday.id = randomID;
+        if(Moment(this.endDate).isSameOrAfter(this.startDate)){
+        var a = Moment(this.startDate);
+        var b = Moment(this.endDate);
+        var randomID = Math.random().toString(36).substr(2, 9)
 
 
+// If you want an inclusive end date (fully-closed interval)
+for (var m = Moment(a); m.diff(b, 'days') <= 0; m.add(1, 'days')) {
+  this.newHoliday.start = m.format('YYYY-MM-DD') + ' 00:00'
+  this.newHoliday.end = m.format('YYYY-MM-DD') + ' 23:59'
 
-      holidaysRef.push(this.newHoliday)
-      this.newHoliday.id = '',
-      this.newHoliday.title = '',
-      this.newHoliday.destination = '',
+  
+      this.newHoliday.id = randomID
+
+      playerHolidaysRef.push(this.newHoliday)
       this.newHoliday.start = ''
-      this.newHoliday.end = '',
-      this.holidayEnding = '',
+      this.newHoliday.end = ''
+}
+      this.newHoliday.id = ''
+      this.newHoliday.title = ''
+      this.newHoliday.destination = ''
+      this.newHoliday.start = ''
+      this.newHoliday.end = ''
+      this.holidayEnding = ''
+      this.startDate = ''
+      this.endDate = ''
       toastr.success('Appointment added successfully')
+        }else{
+          toastr.error('The 2nd Date is in the past of the 1st Date. It must be in the same day or future.')
+        }
       }
-    },
+      },
     deleteAppointment: function(holiday){
-      holidaysRef.child(holiday['.key']).remove()
+      playerHolidaysRef.child(holiday['.key']).remove()
       toastr.success('Appointment removed successfully')
     },
-    getCountries(){
-      var self = this;
-      axios.get(`https://restcountries.eu/rest/v2/all`)
-      .then(res => {
-        var tempArrayHolder = res.data
-                    var i=0;
-                    for(i=0;i<tempArrayHolder.length;i++){
-                      self.countries.push(tempArrayHolder[i].name)
-                    }
-      })
-    }
-  },
-  watch:{
-    holidayEnding(){
-      this.newHoliday.end = this.holidayEnding + ' 23:59'
-    }
   },
   filters: {
   Moment: function (date) {
@@ -169,7 +153,7 @@ for (var m = Moment(a); m.diff(b, 'days') <= 0; m.add(1, 'days')) {
 },
 computed:{
   orderDatesAsc: function(){
-    return _.orderBy(holidays, ['start'], ['asc', 'desc']);
+    return _.orderBy(playerHoliday, ['start'], ['asc', 'desc']);
   }
 }
 

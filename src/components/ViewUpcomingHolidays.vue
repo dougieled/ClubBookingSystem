@@ -1,6 +1,11 @@
   <template>
   <div class="row justify-content-md-center">
-  <div class="col-md-10">
+  <div class="col-md-8">
+    <h3 class="display-7">Search using a name on the right in order to delete their Holidays</h3>
+    <div class="form-group">
+                <label for="nameSearch">Search by Name:</label>
+                <input  type="text"  id="nameSearch"  class="form-control" v-model="nameSearch">
+              </div>
   <!--Upcoming Holidays-->
             <table class="table table-striped">
             <thead>
@@ -14,10 +19,11 @@
             <tbody>
               <tr 
                 v-for="holiday in dateList"
+                v-if="holiday.title ==nameSearch"
                 :key="holiday.id">
                 <td>{{ holiday.title }}</td>
                 <!--<td>{{ holiday.destination }}</td>-->
-                <td>{{ holiday.start | Moment }} -  {{ holiday.end | Moment }}</td>
+                <td>{{ holiday.start | Moment }}</td>
                 <td><button @click="openModalMethod(holiday)" class="btn btn-danger">Delete</button></td>
               </tr>
             </tbody>
@@ -28,6 +34,24 @@
   <button class="btn btn-lg btn-success" @click="deleteAppointment">Yes</button>
    <button class="btn btn-lg btn-danger ml-4" @click="closeModalMethod">No</button>
 </sweet-modal>
+  </div>
+  <div class="col-md-2">
+    <h3 class="display-7">Names</h3>
+  <!--Upcoming Holidays-->
+            <table class="table table-striped">
+            <thead>
+              <tr class="table-bordered">
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr 
+                v-for="holiday in dateList"
+                :key="holiday.id">
+                <td>{{ holiday.title }}</td>
+              </tr>
+            </tbody>
+          </table>
   </div>
   
   </div>
@@ -42,15 +66,15 @@ import lodash from 'lodash'
 import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
 
 
-let holidaysRef = db.ref('holidays');
+let playerHolidaysRef = db.ref('playerHoliday');
 
 export default {
 components:{
     SweetModal, SweetModalTab},
   name: 'AddHoliday',
         firebase:{
-    holidays: holidaysRef,
-    dateList: db.ref('holidays').orderByChild('start')
+    playerHoliday: playerHolidaysRef,
+    dateList: db.ref('playerHoliday').orderByChild('start')
   },
   data () {
     return {
@@ -58,6 +82,7 @@ components:{
       deleteModal:false,
       editable: "false",
       seletedRow: '',
+      nameSearch:'',
     }
   },
 
@@ -72,7 +97,7 @@ components:{
       this.seletedRow = ''
     },
     deleteAppointment: function(){
-      holidaysRef.child(this.seletedRow['.key']).remove()
+      playerHolidaysRef.child(this.seletedRow['.key']).remove()
       toastr.success('Holiday removed successfully')
       this.$refs.deleteModal.close()
       this.seletedRow = ''
@@ -80,13 +105,14 @@ components:{
   },
   filters: {
   Moment: function (date) {
-    return Moment(date).format('MMMM Do YYYY');
+    return Moment(date).format('dddd Do MMMM YYYY');
   }
 },
 computed:{
   orderDatesAsc: function(){
-    return _.orderBy(holidays, ['start'], ['asc', 'desc']);
-  }
+    return _.orderBy(playerHoliday, ['start'], ['asc', 'desc']);
+  },
+  filterNames(){}
 }
 
 }
